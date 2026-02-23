@@ -1,0 +1,21 @@
+﻿Place your photography files here using these exact names:
+- hobby-01.jpg
+- hobby-02.jpg
+- hobby-03.jpg
+- hobby-04.jpg
+- hobby-05.jpg
+- hobby-06.jpg
+- hobby-07.jpg
+- hobby-08.jpg
+- hobby-09.jpg
+- hobby-10.jpg
+- hobby-11.jpg
+- hobby-12.jpg
+- hobby-13.jpg
+- hobby-14.jpg
+- hobby-15.jpg
+- hobby-16.jpg
+- hobby-17.jpg
+- hobby-18.jpg
+- hobby-19.jpg
+- hobby-20.jpg

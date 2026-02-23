@@ -1,0 +1,134 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --c-base: 9 13 18;
+  --c-base-deep: 10 17 25;
+  --c-panel: 15 22 33;
+  --c-line: 34 48 66;
+  --c-brand: 26 198 255;
+  --c-brand-soft: 134 229 255;
+  --c-accent: 245 158 11;
+  --c-text: 236 242 248;
+  --c-muted: 174 191 211;
+  --c-subtitle: 174 191 211;
+  --glass-from: 20 29 42;
+  --glass-to: 10 15 24;
+}
+
+html.light {
+  color-scheme: light;
+  --c-base: 246 249 253;
+  --c-base-deep: 235 242 249;
+  --c-panel: 255 255 255;
+  --c-line: 196 209 224;
+  --c-brand: 0 125 182;
+  --c-brand-soft: 1 88 126;
+  --c-accent: 180 83 9;
+  --c-text: 15 23 42;
+  --c-muted: 55 65 81;
+  --c-subtitle: 55 65 81;
+  --glass-from: 255 255 255;
+  --glass-to: 247 251 255;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.75rem;
+  background: rgb(var(--c-base));
+  color: rgb(var(--c-text));
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 10% 20%, rgb(var(--c-brand) / 0.1), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgb(var(--c-accent) / 0.11), transparent 35%),
+    linear-gradient(180deg, rgb(var(--c-base)) 0%, rgb(var(--c-base-deep)) 100%);
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container-xl {
+  width: min(1160px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.section-pad {
+  padding: 5.5rem 0;
+}
+
+section[id] {
+  scroll-margin-top: 5.75rem;
+}
+
+.glass {
+  background: linear-gradient(135deg, rgb(var(--glass-from) / 0.82), rgb(var(--glass-to) / 0.74));
+  border: 1px solid rgb(var(--c-line) / 0.6);
+  backdrop-filter: blur(10px);
+}
+
+/* Mobile/narrow performance mode: reduce expensive compositing while preserving theme. */
+@media (max-width: 1024px) {
+  .glass {
+    backdrop-filter: none;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, rgb(var(--c-text)) 18%, rgb(var(--c-brand-soft)) 46%, rgb(var(--c-accent)) 76%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grid-noise {
+  background-image:
+    linear-gradient(rgb(var(--c-line) / 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--c-line) / 0.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid rgb(var(--c-brand-soft));
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
+.section-subtitle {
+  color: rgb(var(--c-subtitle));
+}
+
+/* Hard lock subtitle contrast by mode to avoid accidental inversion. */
+html:not(.light) .section-subtitle {
+  color: rgb(174 191 211) !important;
+}
+
+html.light .section-subtitle {
+  color: rgb(55 65 81) !important;
+}
+
+.contact-label {
+  color: rgb(var(--c-text));
+  font-weight: 700;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body {
+    scroll-behavior: auto;
+  }
+}
