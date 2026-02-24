@@ -18,6 +18,9 @@ export default function Navbar() {
   const [theme, setTheme] = useState<Theme>('dark');
   const [ready, setReady] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
+  const [navScale, setNavScale] = useState(1);
+  const navPillRef = useRef<HTMLDivElement | null>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
   const navLockRef = useRef<string | null>(null);
   const navLockTimerRef = useRef<number | null>(null);
   const themeTransitionInFlightRef = useRef(false);
@@ -31,6 +34,32 @@ export default function Navbar() {
     setTheme(initialTheme);
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    const updateNavScale = () => {
+      const pill = navPillRef.current;
+      if (!pill) return;
+      const availableWidth = (pill.parentElement?.clientWidth ?? window.innerWidth) - 2;
+      const naturalWidth = pill.scrollWidth;
+
+      if (!naturalWidth || naturalWidth <= availableWidth) {
+        setNavScale(1);
+        return;
+      }
+
+      const nextScale = Math.max(0.84, Math.min(1, availableWidth / naturalWidth));
+      setNavScale(Number(nextScale.toFixed(3)));
+    };
+
+    updateNavScale();
+    const raf = window.requestAnimationFrame(updateNavScale);
+    window.addEventListener('resize', updateNavScale);
+
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener('resize', updateNavScale);
+    };
+  }, [ready, theme, activeSection]);
 
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.href.replace('#', ''));
@@ -123,6 +152,10 @@ export default function Navbar() {
         themeTransitionAnimRef.current.cancel();
         themeTransitionAnimRef.current = null;
       }
+      if (themeOverlayRef.current) {
+        themeOverlayRef.current.remove();
+        themeOverlayRef.current = null;
+      }
       themeTransitionInFlightRef.current = false;
       applyTheme();
       return;
@@ -134,9 +167,14 @@ export default function Navbar() {
     }
 
     if (isIosSafari) {
-      const originX = nextTheme === 'light' ? 0 : window.innerWidth;
-      const originY = nextTheme === 'light' ? window.innerHeight : 0;
-      const endRadius = Math.hypot(window.innerWidth, window.innerHeight);
+      themeTransitionInFlightRef.current = true;
+      const buttonRect = toggleButtonRef.current?.getBoundingClientRect();
+      const originX = buttonRect ? buttonRect.left + buttonRect.width / 2 : window.innerWidth - 24;
+      const originY = buttonRect ? buttonRect.top + buttonRect.height / 2 : 24;
+      const endRadius = Math.hypot(
+        Math.max(originX, window.innerWidth - originX),
+        Math.max(originY, window.innerHeight - originY)
+      );
       const oldBackground = getComputedStyle(document.body).background;
 
       if (themeOverlayRef.current) {
@@ -144,33 +182,50 @@ export default function Navbar() {
         themeOverlayRef.current = null;
       }
 
-      const overlay = document.createElement('div');
-      overlay.style.position = 'fixed';
-      overlay.style.inset = '0';
-      overlay.style.pointerEvents = 'none';
-      overlay.style.zIndex = '9999';
-      overlay.style.background = oldBackground;
-      overlay.style.clipPath = `circle(${endRadius}px at ${originX}px ${originY}px)`;
-      document.body.appendChild(overlay);
-      themeOverlayRef.current = overlay;
+      const stage = document.createElement('div');
+      stage.style.position = 'fixed';
+      stage.style.inset = '0';
+      stage.style.pointerEvents = 'none';
+      stage.style.zIndex = '9999';
+      stage.style.overflow = 'hidden';
+      stage.style.contain = 'layout paint style';
+      stage.style.backfaceVisibility = 'hidden';
+      stage.style.transform = 'translateZ(0)';
+
+      const circle = document.createElement('div');
+      circle.style.position = 'absolute';
+      circle.style.left = `${originX - endRadius}px`;
+      circle.style.top = `${originY - endRadius}px`;
+      circle.style.width = `${endRadius * 2}px`;
+      circle.style.height = `${endRadius * 2}px`;
+      circle.style.borderRadius = '9999px';
+      circle.style.background = oldBackground;
+      circle.style.transform = 'translateZ(0) scale(1)';
+      circle.style.transformOrigin = 'center';
+      circle.style.willChange = 'transform, opacity';
+      circle.style.backfaceVisibility = 'hidden';
+      stage.appendChild(circle);
+      document.body.appendChild(stage);
+      themeOverlayRef.current = stage;
 
       applyTheme();
 
-      const anim = overlay.animate(
+      const anim = circle.animate(
         {
-          clipPath: [
-            `circle(${endRadius}px at ${originX}px ${originY}px)`,
-            `circle(0px at ${originX}px ${originY}px)`
-          ]
+          transform: ['translateZ(0) scale(1)', 'translateZ(0) scale(0.001)'],
+          opacity: [1, 1]
         },
-        { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+        { duration: 450, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
       );
+      themeTransitionAnimRef.current = anim;
 
       anim.finished.finally(() => {
         if (themeOverlayRef.current) {
           themeOverlayRef.current.remove();
           themeOverlayRef.current = null;
         }
+        themeTransitionAnimRef.current = null;
+        themeTransitionInFlightRef.current = false;
       });
       return;
     }
@@ -249,7 +304,11 @@ export default function Navbar() {
 
   return (
     <div className="fixed inset-x-0 top-2.5 z-50 px-2 md:top-4 md:px-3">
-      <div className="mx-auto flex w-fit max-w-[calc(100vw-0.5rem)] items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md max-[430px]:scale-[0.85] max-[430px]:origin-top max-[390px]:scale-[0.82] sm:gap-1 sm:px-2 sm:py-2">
+      <div
+        ref={navPillRef}
+        className="mx-auto flex w-fit max-w-[calc(100vw-0.5rem)] items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md sm:gap-1 sm:px-2 sm:py-2"
+        style={{ transform: navScale === 1 ? undefined : `scale(${navScale})`, transformOrigin: 'top center' }}
+      >
         {navItems.map((item) => {
           const isActive = activeSection === item.href.replace('#', '');
           return (
@@ -268,9 +327,10 @@ export default function Navbar() {
         })}
 
         <button
+          ref={toggleButtonRef}
           type="button"
           onClick={toggleTheme}
-          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 max-[430px]:h-6 max-[430px]:w-6 sm:ml-1 sm:h-8 sm:w-8"
+          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 sm:ml-1 sm:h-8 sm:w-8"
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
