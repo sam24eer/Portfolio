@@ -201,7 +201,7 @@ export default function Navbar() {
 
   return (
     <div className="fixed inset-x-0 top-2.5 z-50 px-2 md:top-4 md:px-3">
-      <div className="mx-auto flex w-fit max-w-full items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md max-[430px]:gap-0 max-[430px]:px-1 max-[430px]:py-1 max-[430px]:scale-[0.87] max-[430px]:origin-top max-[390px]:scale-[0.84] sm:gap-1 sm:px-2 sm:py-2">
+      <div className="mx-auto flex w-fit max-w-full items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md max-[430px]:gap-0 max-[430px]:px-1 max-[430px]:py-1 max-[430px]:scale-[0.9] max-[430px]:origin-top max-[390px]:scale-[0.86] sm:gap-1 sm:px-2 sm:py-2">
         {navItems.map((item) => {
           const isActive = activeSection === item.href.replace('#', '');
           return (
@@ -209,7 +209,7 @@ export default function Navbar() {
               key={item.href}
               href={item.href}
               onClick={(event) => onNavClick(event, item.href)}
-              className={`focus-ring whitespace-nowrap rounded-full px-1.5 py-1 text-[11px] font-medium transition max-[430px]:px-1 max-[430px]:text-[10px] sm:px-3 sm:py-1.5 sm:text-xs md:px-4 ${
+              className={`focus-ring whitespace-nowrap rounded-full px-1.5 py-1 text-[11px] font-medium transition max-[430px]:px-1 max-[430px]:text-[11px] sm:px-3 sm:py-1.5 sm:text-xs md:px-4 ${
                 isActive ? 'bg-brand/20 text-text' : 'text-muted hover:bg-brand/15 hover:text-text'
               }`}
               aria-current={isActive ? 'page' : undefined}
@@ -222,7 +222,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={toggleTheme}
-          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 max-[430px]:ml-0 max-[430px]:h-6 max-[430px]:w-6 sm:ml-1 sm:h-8 sm:w-8"
+          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 max-[430px]:ml-0 max-[430px]:h-7 max-[430px]:w-7 sm:ml-1 sm:h-8 sm:w-8"
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
