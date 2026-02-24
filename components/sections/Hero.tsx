@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowDownRight, Brush, Download, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowDownRight, Download, Github, Linkedin, Mail } from 'lucide-react';
 import useNarrowMotion from '@/components/hooks/useNarrowMotion';
 
 const textReveal = {
@@ -11,11 +11,22 @@ const textReveal = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }
 };
 
+const gmailComposeUrl = (subject: string, body: string) =>
+  `https://mail.google.com/mail/?view=cm&fs=1&to=skadi@asu.edu&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+function BehanceIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" fill="currentColor">
+      <path d="M8.45 10.7c1.2 0 2.2-.8 2.2-2.08 0-1.2-.9-2.02-2.3-2.02H4v10.8h4.55c2.2 0 3.45-1.12 3.45-2.86 0-1.84-1.3-3.14-3.55-3.14ZM6.1 8.05h2c.7 0 1.12.38 1.12.96 0 .64-.44 1.03-1.12 1.03h-2V8.05Zm2.17 7.82H6.1v-2.45h2.2c.95 0 1.45.45 1.45 1.2 0 .8-.53 1.25-1.48 1.25Zm6.38-6.68h4.62V8h-4.62v1.2Zm2.3 1.05c-2.33 0-3.9 1.6-3.9 3.86 0 2.34 1.5 3.85 4 3.85 1.82 0 3.15-.9 3.67-2.38h-1.88c-.3.48-.92.77-1.72.77-1.13 0-1.84-.58-1.95-1.62h5.7c.03-2.86-1.58-4.48-3.92-4.48Zm-1.77 3c.12-.96.72-1.5 1.74-1.5s1.62.56 1.7 1.5h-3.44Z" />
+    </svg>
+  );
+}
+
 const socialLinks = [
   { href: 'https://www.linkedin.com/in/sameer-kadi-a0ba7320a/', label: 'LinkedIn', icon: Linkedin },
   { href: 'https://github.com/sam24eer?tab=repositories', label: 'GitHub', icon: Github },
-  { href: 'https://www.behance.net/sameerkadi', label: 'Behance', icon: Brush },
-  { href: 'mailto:skadi@asu.edu', label: 'Email', icon: Mail }
+  { href: 'https://www.behance.net/sameerkadi', label: 'Behance', icon: BehanceIcon },
+  { href: gmailComposeUrl('Portfolio Inquiry', ''), label: 'Email', icon: Mail }
 ];
 
 const fallbackPortrait =
@@ -93,8 +104,8 @@ export default function Hero() {
                   <a
                     key={item.label}
                     href={item.href}
-                    target={item.href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={item.href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                    target="_blank"
+                    rel="noreferrer"
                     aria-label={item.label}
                     title={item.label}
                     className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-panel text-muted transition hover:border-brand/60 hover:text-text"
