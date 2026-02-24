@@ -22,6 +22,7 @@ export default function Navbar() {
   const navLockTimerRef = useRef<number | null>(null);
   const themeTransitionInFlightRef = useRef(false);
   const themeTransitionAnimRef = useRef<Animation | null>(null);
+  const themeOverlayRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('theme');
@@ -127,8 +128,50 @@ export default function Navbar() {
       return;
     }
 
-    if (prefersReducedMotion || isIosSafari) {
+    if (prefersReducedMotion) {
       applyTheme();
+      return;
+    }
+
+    if (isIosSafari) {
+      const originX = nextTheme === 'light' ? 0 : window.innerWidth;
+      const originY = nextTheme === 'light' ? window.innerHeight : 0;
+      const endRadius = Math.hypot(window.innerWidth, window.innerHeight);
+      const oldBackground = getComputedStyle(document.body).background;
+
+      if (themeOverlayRef.current) {
+        themeOverlayRef.current.remove();
+        themeOverlayRef.current = null;
+      }
+
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.pointerEvents = 'none';
+      overlay.style.zIndex = '9999';
+      overlay.style.background = oldBackground;
+      overlay.style.clipPath = `circle(${endRadius}px at ${originX}px ${originY}px)`;
+      document.body.appendChild(overlay);
+      themeOverlayRef.current = overlay;
+
+      applyTheme();
+
+      const anim = overlay.animate(
+        {
+          clipPath: [
+            `circle(${endRadius}px at ${originX}px ${originY}px)`,
+            `circle(0px at ${originX}px ${originY}px)`
+          ]
+        },
+        { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+      );
+
+      anim.finished.finally(() => {
+        if (themeOverlayRef.current) {
+          themeOverlayRef.current.remove();
+          themeOverlayRef.current = null;
+        }
+      });
       return;
     }
 
