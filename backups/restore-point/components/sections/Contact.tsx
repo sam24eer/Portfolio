@@ -1,16 +1,27 @@
-﻿"use client";
+"use client";
 
 import { FormEvent, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUp, Brush, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowUp, Github, Linkedin, Mail } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import useNarrowMotion from '@/components/hooks/useNarrowMotion';
+
+function BehanceIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" fill="currentColor">
+      <path d="M8.45 10.7c1.2 0 2.2-.8 2.2-2.08 0-1.2-.9-2.02-2.3-2.02H4v10.8h4.55c2.2 0 3.45-1.12 3.45-2.86 0-1.84-1.3-3.14-3.55-3.14ZM6.1 8.05h2c.7 0 1.12.38 1.12.96 0 .64-.44 1.03-1.12 1.03h-2V8.05Zm2.17 7.82H6.1v-2.45h2.2c.95 0 1.45.45 1.45 1.2 0 .8-.53 1.25-1.48 1.25Zm6.38-6.68h4.62V8h-4.62v1.2Zm2.3 1.05c-2.33 0-3.9 1.6-3.9 3.86 0 2.34 1.5 3.85 4 3.85 1.82 0 3.15-.9 3.67-2.38h-1.88c-.3.48-.92.77-1.72.77-1.13 0-1.84-.58-1.95-1.62h5.7c.03-2.86-1.58-4.48-3.92-4.48Zm-1.77 3c.12-.96.72-1.5 1.74-1.5s1.62.56 1.7 1.5h-3.44Z" />
+    </svg>
+  );
+}
+
+const gmailComposeUrl = (subject: string, body: string) =>
+  `https://mail.google.com/mail/?view=cm&fs=1&to=skadi@asu.edu&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
 const links = [
   { title: 'LinkedIn', href: 'https://www.linkedin.com/in/sameer-kadi-a0ba7320a/', icon: Linkedin },
   { title: 'GitHub', href: 'https://github.com/sam24eer?tab=repositories', icon: Github },
-  { title: 'Behance', href: 'https://www.behance.net/sameerkadi', icon: Brush },
-  { title: 'Email', href: 'mailto:skadi@asu.edu', icon: Mail }
+  { title: 'Behance', href: 'https://www.behance.net/sameerkadi', icon: BehanceIcon },
+  { title: 'Email', href: gmailComposeUrl('Portfolio Inquiry', ''), icon: Mail }
 ];
 
 export default function Contact() {
@@ -22,10 +33,16 @@ export default function Contact() {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const subject = encodeURIComponent(`Portfolio Inquiry from ${name || 'Recruiter'}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    const subject = `Portfolio Inquiry from ${name || 'Recruiter'}`;
+    const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
 
-    window.location.href = `mailto:skadi@asu.edu?subject=${subject}&body=${body}`;
+    const popup = window.open(gmailComposeUrl(subject, body), '_blank', 'noopener,noreferrer');
+
+    if (!popup) {
+      const fallbackSubject = encodeURIComponent(subject);
+      const fallbackBody = encodeURIComponent(body);
+      window.location.href = `mailto:skadi@asu.edu?subject=${fallbackSubject}&body=${fallbackBody}`;
+    }
   };
 
   return (
@@ -39,8 +56,7 @@ export default function Contact() {
 
         <div className="grid gap-6 lg:grid-cols-[0.43fr_0.57fr]">
           <div className="glass rounded-2xl p-6 md:p-8">
-            <h3 className="font-[var(--font-display)] text-3xl font-semibold text-text">Let’s Connect</h3>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
+            <p className="max-w-md text-sm leading-relaxed text-muted">
               Open to Product Operations Associate and AI Product roles in the US and remote environments.
             </p>
 
@@ -51,8 +67,8 @@ export default function Contact() {
                   <a
                     key={link.title}
                     href={link.href}
-                    target={link.href.startsWith('mailto:') ? undefined : '_blank'}
-                    rel={link.href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                    target="_blank"
+                    rel="noreferrer"
                     aria-label={link.title}
                     title={link.title}
                     className="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-panel text-muted transition hover:border-brand/60 hover:text-text"
@@ -64,7 +80,8 @@ export default function Contact() {
             </div>
 
             <div className="mt-8 rounded-xl border border-line bg-base/45 p-4 text-xs text-muted">
-              Form submission opens your mail client and pre-fills an email to <span className="text-text">skadi@asu.edu</span>.
+              Form submission opens web mail compose. If blocked, it falls back to your mail app for{' '}
+              <span className="text-text">skadi@asu.edu</span>.
             </div>
           </div>
 

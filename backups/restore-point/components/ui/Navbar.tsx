@@ -200,8 +200,8 @@ export default function Navbar() {
   };
 
   return (
-    <div className="fixed inset-x-0 top-3 z-50 px-3 md:top-4">
-      <div className="mx-auto flex w-fit items-center gap-1 rounded-full border border-line/70 bg-panel/85 px-2 py-2 shadow-lg backdrop-blur-md">
+    <div className="fixed inset-x-0 top-2.5 z-50 px-2 md:top-4 md:px-3">
+      <div className="mx-auto flex w-fit max-w-full items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md max-[430px]:scale-[0.9] max-[430px]:origin-top max-[390px]:scale-[0.86] sm:gap-1 sm:px-2 sm:py-2">
         {navItems.map((item) => {
           const isActive = activeSection === item.href.replace('#', '');
           return (
@@ -209,7 +209,7 @@ export default function Navbar() {
               key={item.href}
               href={item.href}
               onClick={(event) => onNavClick(event, item.href)}
-              className={`focus-ring rounded-full px-3 py-1.5 text-xs font-medium transition md:px-4 ${
+              className={`focus-ring whitespace-nowrap rounded-full px-1.5 py-1 text-[11px] font-medium transition max-[430px]:px-1.5 sm:px-3 sm:py-1.5 sm:text-xs md:px-4 ${
                 isActive ? 'bg-brand/20 text-text' : 'text-muted hover:bg-brand/15 hover:text-text'
               }`}
               aria-current={isActive ? 'page' : undefined}
@@ -222,11 +222,11 @@ export default function Navbar() {
         <button
           type="button"
           onClick={toggleTheme}
-          className="focus-ring ml-1 inline-flex h-8 w-8 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50"
+          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 sm:ml-1 sm:h-8 sm:w-8"
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          {!ready ? null : theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          {!ready ? null : theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
         </button>
       </div>
     </div>
