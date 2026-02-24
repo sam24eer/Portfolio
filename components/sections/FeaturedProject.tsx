@@ -61,21 +61,7 @@ function ArchitectureDiagram() {
           const detailLines = layerDetails(layer.details);
           return (
             <g key={layer.name}>
-              <motion.rect
-                x="40"
-                y={y}
-                rx="14"
-                ry="14"
-                width="500"
-                height="78"
-                fill="rgb(var(--c-panel))"
-                fillOpacity="0.92"
-                stroke="rgb(var(--c-brand))"
-                strokeOpacity="0.45"
-                initial={isNarrowMotion ? { opacity: 0 } : { pathLength: 0, opacity: 0 }}
-                animate={isNarrowMotion ? { opacity: 1 } : { pathLength: 1, opacity: 1 }}
-                transition={{ delay: isNarrowMotion ? 0 : index * 0.12, duration: isNarrowMotion ? 0.26 : 0.7 }}
-              />
+              <motion.rect x="40" y={y} rx="14" ry="14" width="500" height="78" fill="rgb(var(--c-panel) / 0.92)" stroke="rgb(var(--c-brand) / 0.45)" initial={isNarrowMotion ? { opacity: 0 } : { pathLength: 0, opacity: 0 }} whileInView={isNarrowMotion ? { opacity: 1 } : { pathLength: 1, opacity: 1 }} viewport={{ once: isNarrowMotion, amount: 0.4 }} transition={{ delay: isNarrowMotion ? 0 : index * 0.12, duration: isNarrowMotion ? 0.26 : 0.7 }} />
               <text x="60" y={y + 30} fill="rgb(var(--c-text))" fontSize="17" fontWeight="600">{layer.name}</text>
               {detailLines.slice(0, 2).map((line, lineIndex) => (
                 <text key={`${layer.name}-${lineIndex}`} x="60" y={y + 53 + lineIndex * 17} fill="rgb(var(--c-muted))" fontSize="11">
@@ -89,13 +75,13 @@ function ArchitectureDiagram() {
           <motion.path
             key={path}
             d={path}
-            stroke="rgb(var(--c-brand))"
-            strokeOpacity="0.75"
+            stroke="rgb(var(--c-brand) / 0.75)"
             strokeWidth="2"
             strokeDasharray="6 6"
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
+            whileInView={{ pathLength: 1, opacity: 1 }}
+            viewport={{ once: isNarrowMotion, amount: 0.4 }}
             transition={{ delay: isNarrowMotion ? 0 : 0.25 + index * 0.08, duration: isNarrowMotion ? 0.24 : 0.55 }}
           />
         ))}
@@ -105,12 +91,11 @@ function ArchitectureDiagram() {
               cx={node.x}
               cy={node.y}
               r="20"
-              fill="rgb(var(--c-brand))"
-              fillOpacity="0.18"
-              stroke="rgb(var(--c-brand))"
-              strokeOpacity="0.8"
+              fill="rgb(var(--c-brand) / 0.18)"
+              stroke="rgb(var(--c-brand) / 0.8)"
               initial={{ scale: 0.2, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              viewport={{ once: isNarrowMotion, amount: 0.4 }}
               transition={{ delay: isNarrowMotion ? 0 : 0.2 + index * 0.08, duration: isNarrowMotion ? 0.24 : 0.45 }}
             />
             {node.key === 'auto' ? (
