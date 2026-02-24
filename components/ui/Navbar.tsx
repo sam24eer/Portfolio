@@ -105,6 +105,11 @@ export default function Navbar() {
   const toggleTheme = () => {
     const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ua = navigator.userAgent;
+    const isIosSafari =
+      /iP(hone|ad|od)/.test(ua) &&
+      /WebKit/.test(ua) &&
+      !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
     const applyTheme = () => {
       document.documentElement.classList.toggle('light', nextTheme === 'light');
       localStorage.setItem('theme', nextTheme);
@@ -122,7 +127,7 @@ export default function Navbar() {
       return;
     }
 
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || isIosSafari) {
       applyTheme();
       return;
     }
@@ -201,7 +206,7 @@ export default function Navbar() {
 
   return (
     <div className="fixed inset-x-0 top-2.5 z-50 px-2 md:top-4 md:px-3">
-      <div className="mx-auto flex w-fit max-w-full items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md max-[430px]:scale-[0.9] max-[430px]:origin-top max-[390px]:scale-[0.86] sm:gap-1 sm:px-2 sm:py-2">
+      <div className="mx-auto flex w-fit max-w-[calc(100vw-0.5rem)] items-center gap-0.5 rounded-full border border-line/70 bg-panel/85 px-1.5 py-1.5 shadow-lg backdrop-blur-md max-[430px]:scale-[0.85] max-[430px]:origin-top max-[390px]:scale-[0.82] sm:gap-1 sm:px-2 sm:py-2">
         {navItems.map((item) => {
           const isActive = activeSection === item.href.replace('#', '');
           return (
@@ -222,11 +227,11 @@ export default function Navbar() {
         <button
           type="button"
           onClick={toggleTheme}
-          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 sm:ml-1 sm:h-8 sm:w-8"
+          className="focus-ring ml-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line bg-base text-text transition hover:border-brand/50 max-[430px]:h-6 max-[430px]:w-6 sm:ml-1 sm:h-8 sm:w-8"
           aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          {!ready ? null : theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          {!ready ? null : theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
         </button>
       </div>
     </div>
