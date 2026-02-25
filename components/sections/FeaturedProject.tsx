@@ -255,7 +255,7 @@ export default function FeaturedProject() {
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: isNarrowMotion, amount: 0.25 }}
+            viewport={{ once: false, amount: 0.25 }}
             transition={{
               duration: isNarrowMotion ? 0.32 : 0.55,
               delay: isNarrowMotion ? 0 : 0.1,
@@ -263,31 +263,60 @@ export default function FeaturedProject() {
             }}
             className="glass rounded-2xl p-6"
           >
-            <h3 className="mb-4 font-[var(--font-display)] text-xl text-text">Operations Design</h3>
+            <motion.h3
+              className="mb-4 font-[var(--font-display)] text-xl text-text"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.6 }}
+              transition={{ duration: isNarrowMotion ? 0.24 : 0.42 }}
+            >
+              Operations Design
+            </motion.h3>
             <ul className="space-y-3 text-sm text-muted">
-              {featuredCaseStudy.workflows.map((item) => (
-                <li key={item} className="rounded-lg border border-line/70 bg-base/40 p-3">
+              {featuredCaseStudy.workflows.map((item, index) => (
+                <motion.li
+                  key={item}
+                  className="rounded-lg border border-line/70 bg-base/40 p-3"
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.6 }}
+                  transition={{
+                    duration: isNarrowMotion ? 0.22 : 0.4,
+                    delay: isNarrowMotion ? 0 : index * 0.05
+                  }}
+                >
                   {item}
-                </li>
+                </motion.li>
               ))}
             </ul>
             <div className="mt-5 flex flex-wrap gap-2">
-              {stack.map((tech) => (
-                <span
+              {stack.map((tech, index) => (
+                <motion.span
                   key={tech}
                   className="rounded-full border border-brand/35 bg-brand/10 px-3 py-1 text-xs text-brandSoft"
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.7 }}
+                  transition={{
+                    duration: isNarrowMotion ? 0.2 : 0.32,
+                    delay: isNarrowMotion ? 0 : 0.12 + index * 0.03
+                  }}
                 >
                   {tech}
-                </span>
+                </motion.span>
               ))}
             </div>
-            <button
+            <motion.button
               type="button"
               onClick={() => setOpen(true)}
               className="focus-ring mt-6 w-full rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-text transition hover:border-brand/60"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.8 }}
+              transition={{ duration: isNarrowMotion ? 0.2 : 0.32, delay: isNarrowMotion ? 0 : 0.18 }}
             >
               Open Full Case Study
-            </button>
+            </motion.button>
           </motion.div>
         </div>
       </div>
