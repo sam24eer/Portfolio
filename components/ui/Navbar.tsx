@@ -168,6 +168,13 @@ export default function Navbar() {
 
     if (isIosSafari) {
       themeTransitionInFlightRef.current = true;
+      const buttonRect = toggleButtonRef.current?.getBoundingClientRect();
+      const originX = buttonRect ? buttonRect.left + buttonRect.width / 2 : window.innerWidth - 24;
+      const originY = buttonRect ? buttonRect.top + buttonRect.height / 2 : 24;
+      const endRadius = Math.hypot(
+        Math.max(originX, window.innerWidth - originX),
+        Math.max(originY, window.innerHeight - originY)
+      );
       const oldBackground = getComputedStyle(document.body).background;
 
       if (themeOverlayRef.current) {
@@ -181,30 +188,34 @@ export default function Navbar() {
       stage.style.pointerEvents = 'none';
       stage.style.zIndex = '9999';
       stage.style.overflow = 'hidden';
-      stage.style.contain = 'paint';
+      stage.style.contain = 'layout paint style';
       stage.style.backfaceVisibility = 'hidden';
-      stage.style.transform = 'translate3d(0,0,0)';
+      stage.style.transform = 'translateZ(0)';
 
-      // Safari mobile: use a transform-only diagonal wipe (GPU-friendly) instead of
-      // a large radial clip animation, which can stutter on 60Hz devices.
-      const sheet = document.createElement('div');
-      sheet.style.position = 'absolute';
-      sheet.style.inset = '0';
-      sheet.style.background = oldBackground;
-      sheet.style.transform = 'translate3d(0,0,0)';
-      sheet.style.willChange = 'transform';
-      sheet.style.backfaceVisibility = 'hidden';
-      stage.appendChild(sheet);
+      const circle = document.createElement('div');
+      circle.style.position = 'absolute';
+      circle.style.left = `${originX - endRadius}px`;
+      circle.style.top = `${originY - endRadius}px`;
+      circle.style.width = `${endRadius * 2}px`;
+      circle.style.height = `${endRadius * 2}px`;
+      circle.style.borderRadius = '9999px';
+      circle.style.background = oldBackground;
+      circle.style.transform = 'translateZ(0) scale(1)';
+      circle.style.transformOrigin = 'center';
+      circle.style.willChange = 'transform, opacity';
+      circle.style.backfaceVisibility = 'hidden';
+      stage.appendChild(circle);
       document.body.appendChild(stage);
       themeOverlayRef.current = stage;
 
       applyTheme();
 
-      const anim = sheet.animate(
+      const anim = circle.animate(
         {
-          transform: ['translate3d(0,0,0)', 'translate3d(-112%,112%,0)']
+          transform: ['translateZ(0) scale(1)', 'translateZ(0) scale(0.001)'],
+          opacity: [1, 1]
         },
-        { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
+        { duration: 450, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
       );
       themeTransitionAnimRef.current = anim;
 
