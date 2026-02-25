@@ -1,6 +1,7 @@
-﻿import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Space_Grotesk, Sora } from 'next/font/google';
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {`try { var t = localStorage.getItem('theme'); if (t === 'light') document.documentElement.classList.add('light'); } catch (e) {}`}
         </Script>
         {children}
+        <Analytics />
       </body>
     </html>
   );
 }
+
