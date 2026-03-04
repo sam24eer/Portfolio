@@ -67,6 +67,7 @@ body {
   overflow: hidden;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
+  opacity: 0.92;
 }
 
 .ambient-bg::before,
@@ -81,35 +82,35 @@ body {
 
 .ambient-bg::before {
   background:
-    radial-gradient(44% 34% at 16% 20%, rgb(var(--c-brand) / 0.2), transparent 72%),
-    radial-gradient(38% 30% at 84% 14%, rgb(var(--c-accent) / 0.18), transparent 74%),
-    radial-gradient(34% 28% at 60% 82%, rgb(var(--c-brand-soft) / 0.14), transparent 76%);
-  animation: ambientFloatA 26s ease-in-out infinite alternate;
+    radial-gradient(36% 28% at 14% 18%, rgb(var(--c-brand) / 0.28), transparent 68%),
+    radial-gradient(32% 25% at 84% 14%, rgb(var(--c-accent) / 0.24), transparent 70%),
+    radial-gradient(28% 22% at 62% 82%, rgb(var(--c-brand-soft) / 0.2), transparent 72%);
+  animation: ambientFloatA 16s ease-in-out infinite alternate;
 }
 
 .ambient-bg::after {
   background:
-    radial-gradient(40% 30% at 8% 84%, rgb(var(--c-brand) / 0.14), transparent 72%),
-    radial-gradient(34% 26% at 94% 68%, rgb(var(--c-accent) / 0.12), transparent 74%),
-    radial-gradient(30% 24% at 50% 30%, rgb(var(--c-brand-soft) / 0.1), transparent 76%);
-  animation: ambientFloatB 34s ease-in-out infinite alternate;
+    radial-gradient(34% 26% at 8% 84%, rgb(var(--c-brand) / 0.22), transparent 70%),
+    radial-gradient(28% 22% at 94% 68%, rgb(var(--c-accent) / 0.18), transparent 72%),
+    radial-gradient(24% 20% at 50% 30%, rgb(var(--c-brand-soft) / 0.16), transparent 74%);
+  animation: ambientFloatB 22s ease-in-out infinite alternate;
 }
 
 @keyframes ambientFloatA {
   0% {
-    transform: translate3d(-2%, -1.5%, 0) scale(1);
+    transform: translate3d(-4.5%, -3.2%, 0) scale(1);
   }
   100% {
-    transform: translate3d(2.5%, 2%, 0) scale(1.045);
+    transform: translate3d(5.2%, 4%, 0) scale(1.11);
   }
 }
 
 @keyframes ambientFloatB {
   0% {
-    transform: translate3d(2.2%, -2.2%, 0) scale(1.03);
+    transform: translate3d(4%, -4.2%, 0) scale(1.08);
   }
   100% {
-    transform: translate3d(-2.4%, 2.4%, 0) scale(1);
+    transform: translate3d(-4.6%, 4.6%, 0) scale(1);
   }
 }
 
@@ -147,11 +148,11 @@ section[id] {
   }
 
   .ambient-bg::before {
-    animation-duration: 28s;
+    animation-duration: 20s;
   }
 
   .ambient-bg::after {
-    animation-duration: 36s;
+    animation-duration: 26s;
   }
 }
 
