@@ -33,10 +33,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Script id="theme-init" strategy="beforeInteractive">
           {`try { var t = localStorage.getItem('theme'); if (t === 'light') document.documentElement.classList.add('light'); } catch (e) {}`}
         </Script>
-        {children}
+        <div aria-hidden="true" className="ambient-bg" />
+        <div className="app-shell">{children}</div>
         <Analytics />
       </body>
     </html>
   );
 }
-

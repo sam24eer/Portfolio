@@ -45,11 +45,72 @@ body {
 }
 
 body {
+  position: relative;
+  overflow-x: hidden;
   background-image:
     radial-gradient(circle at 10% 20%, rgb(var(--c-brand) / 0.1), transparent 40%),
     radial-gradient(circle at 90% 10%, rgb(var(--c-accent) / 0.11), transparent 35%),
     linear-gradient(180deg, rgb(var(--c-base)) 0%, rgb(var(--c-base-deep)) 100%);
   min-height: 100vh;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.ambient-bg {
+  position: fixed;
+  inset: -18vmax;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.ambient-bg::before,
+.ambient-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.ambient-bg::before {
+  background:
+    radial-gradient(44% 34% at 16% 20%, rgb(var(--c-brand) / 0.2), transparent 72%),
+    radial-gradient(38% 30% at 84% 14%, rgb(var(--c-accent) / 0.18), transparent 74%),
+    radial-gradient(34% 28% at 60% 82%, rgb(var(--c-brand-soft) / 0.14), transparent 76%);
+  animation: ambientFloatA 26s ease-in-out infinite alternate;
+}
+
+.ambient-bg::after {
+  background:
+    radial-gradient(40% 30% at 8% 84%, rgb(var(--c-brand) / 0.14), transparent 72%),
+    radial-gradient(34% 26% at 94% 68%, rgb(var(--c-accent) / 0.12), transparent 74%),
+    radial-gradient(30% 24% at 50% 30%, rgb(var(--c-brand-soft) / 0.1), transparent 76%);
+  animation: ambientFloatB 34s ease-in-out infinite alternate;
+}
+
+@keyframes ambientFloatA {
+  0% {
+    transform: translate3d(-2%, -1.5%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(2.5%, 2%, 0) scale(1.045);
+  }
+}
+
+@keyframes ambientFloatB {
+  0% {
+    transform: translate3d(2.2%, -2.2%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(-2.4%, 2.4%, 0) scale(1);
+  }
 }
 
 * {
@@ -79,6 +140,18 @@ section[id] {
 @media (max-width: 1024px) {
   .glass {
     backdrop-filter: none;
+  }
+
+  .ambient-bg {
+    inset: -14vmax;
+  }
+
+  .ambient-bg::before {
+    animation-duration: 28s;
+  }
+
+  .ambient-bg::after {
+    animation-duration: 36s;
   }
 }
 
@@ -130,5 +203,10 @@ html.light .section-subtitle {
   html,
   body {
     scroll-behavior: auto;
+  }
+
+  .ambient-bg::before,
+  .ambient-bg::after {
+    animation: none;
   }
 }
