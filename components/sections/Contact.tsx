@@ -14,34 +14,52 @@ function BehanceIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-const gmailComposeUrl = (subject: string, body: string) =>
-  `https://mail.google.com/mail/?view=cm&fs=1&to=skadi@asu.edu&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
 const links = [
   { title: 'LinkedIn', href: 'https://www.linkedin.com/in/sameer-kadi-a0ba7320a/', icon: Linkedin },
   { title: 'GitHub', href: 'https://github.com/sam24eer?tab=repositories', icon: Github },
   { title: 'Behance', href: 'https://www.behance.net/sameerkadi', icon: BehanceIcon },
-  { title: 'Email', href: gmailComposeUrl('Portfolio Inquiry', ''), icon: Mail }
+  { title: 'Email', href: 'mailto:skadi@asu.edu', icon: Mail }
 ];
+
+type SubmitState = 'idle' | 'sending' | 'success' | 'error';
 
 export default function Contact() {
   const isNarrowMotion = useNarrowMotion();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [submitState, setSubmitState] = useState<SubmitState>('idle');
+  const [submitNotice, setSubmitNotice] = useState('');
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submitState === 'sending') return;
 
-    const subject = `Portfolio Inquiry from ${name || 'Recruiter'}`;
-    const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+    setSubmitState('sending');
+    setSubmitNotice('');
 
-    const popup = window.open(gmailComposeUrl(subject, body), '_blank', 'noopener,noreferrer');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
 
-    if (!popup) {
-      const fallbackSubject = encodeURIComponent(subject);
-      const fallbackBody = encodeURIComponent(body);
-      window.location.href = `mailto:skadi@asu.edu?subject=${fallbackSubject}&body=${fallbackBody}`;
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        const errorText = typeof data?.error === 'string' ? data.error : 'Unable to send message right now.';
+        throw new Error(errorText);
+      }
+
+      setSubmitState('success');
+      setSubmitNotice('Message sent successfully. I will get back to you soon.');
+      setName('');
+      setEmail('');
+      setMessage('');
+    } catch (error) {
+      const errorText = error instanceof Error ? error.message : 'Unable to send message right now.';
+      setSubmitState('error');
+      setSubmitNotice(errorText);
     }
   };
 
@@ -50,8 +68,8 @@ export default function Contact() {
       <div className="container-xl">
         <SectionHeading
           eyebrow="Contact"
-          title="Let’s Connect"
-          subtitle="Let’s connect to discuss Product Ops, analytics, and AI product opportunities."
+          title="Let's Connect"
+          subtitle="Let's connect to discuss Product Ops, analytics, and AI product opportunities."
         />
 
         <div className="grid gap-6 lg:grid-cols-[0.43fr_0.57fr]">
@@ -80,8 +98,8 @@ export default function Contact() {
             </div>
 
             <div className="mt-8 rounded-xl border border-line bg-base/45 p-4 text-xs text-muted">
-              Form submission opens web mail compose. If blocked, it falls back to your mail app for{' '}
-              <span className="text-text">skadi@asu.edu</span>.
+              Form submission sends directly from this website and delivers to{' '}
+              <span className="text-text">skadi@asu.edu</span> without opening a mail app.
             </div>
           </div>
 
@@ -101,6 +119,7 @@ export default function Contact() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  autoComplete="name"
                   required
                   className="focus-ring h-12 rounded-xl border border-line bg-base/55 px-4 text-text placeholder:text-muted placeholder:opacity-60"
                   placeholder="Write your name"
@@ -114,6 +133,7 @@ export default function Contact() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   required
                   className="focus-ring h-12 rounded-xl border border-line bg-base/55 px-4 text-text placeholder:text-muted placeholder:opacity-60"
                   placeholder="you@company.com"
@@ -135,10 +155,20 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="focus-ring mt-2 h-12 rounded-full border border-brand/55 bg-brand/20 px-5 text-sm font-semibold text-brandSoft transition hover:bg-brand/30"
+                disabled={submitState === 'sending'}
+                className="focus-ring mt-2 h-12 rounded-full border border-brand/55 bg-brand/20 px-5 text-sm font-semibold text-brandSoft transition hover:bg-brand/30 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Send message
+                {submitState === 'sending' ? 'Sending...' : 'Send message'}
               </button>
+
+              {submitNotice ? (
+                <p
+                  className={`text-sm ${submitState === 'error' ? 'text-red-300' : 'text-brandSoft'}`}
+                  aria-live="polite"
+                >
+                  {submitNotice}
+                </p>
+              ) : null}
             </div>
           </motion.form>
         </div>
@@ -155,4 +185,3 @@ export default function Contact() {
     </section>
   );
 }
-

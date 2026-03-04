@@ -18,8 +18,8 @@ https://sameerkadi.vercel.app/
 - Skills architecture grouped by capability clusters.
 - Photography hobby gallery with responsive layout and image expand modal.
 - Contact section with social links and form flow:
-  - opens web mail compose first
-  - falls back to local mail app if needed
+  - sends message directly through a backend API route
+  - no Gmail/mail-app redirect required for form submission
 - Resume download route wired to latest `public/Sameer-Kadi-Resume.pdf`.
 - Mobile and narrow-layout performance optimizations for smoother scrolling.
 
@@ -42,6 +42,18 @@ https://sameerkadi.vercel.app/
 - Production build: `npm run build`
 - Production run: `npm start`
 
+## Contact form email setup
+
+The contact form uses server-side email delivery via SMTP (Gmail app password flow).
+
+Required environment variables:
+
+- `SMTP_HOST` -> SMTP server host (for Gmail: `smtp.gmail.com`)
+- `SMTP_PORT` -> SMTP server port (`465` for secure SMTP)
+- `SMTP_USER` -> sender Gmail address (your alternate mail id)
+- `SMTP_PASS` -> Gmail 16-character app password
+- `CONTACT_TO_EMAIL` -> inbox destination (optional, defaults to `skadi@asu.edu`)
+
 ## Key project structure
 
 - `data/site.ts` -> centralized site content and section data.
@@ -60,4 +72,3 @@ https://sameerkadi.vercel.app/
 
 Source is GitHub; production is deployed on Vercel.  
 Push to `main` to trigger a new deployment.
-
