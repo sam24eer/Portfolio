@@ -208,6 +208,14 @@ html.light .section-subtitle {
   font-weight: 700;
 }
 
+.featured-feature-line {
+  color: rgb(174 191 211) !important;
+}
+
+html.light .featured-feature-line {
+  color: rgb(31 41 55) !important;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;

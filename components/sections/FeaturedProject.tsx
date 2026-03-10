@@ -84,10 +84,10 @@ function ArchitectureDiagram() {
   };
 
   return (
-    <div ref={diagramRef} className="glass rounded-2xl p-5 md:p-6">
+    <div ref={diagramRef} className="glass h-full rounded-2xl p-5 md:p-6">
       <h3 className="mb-4 font-[var(--font-display)] text-xl text-text">System Architecture</h3>
       <svg
-        viewBox="0 0 820 600"
+        viewBox="0 0 820 640"
         className="h-auto w-full"
         role="img"
         aria-label="AI support operations architecture with layered flow and ops control"
@@ -241,12 +241,13 @@ export default function FeaturedProject() {
           title={featuredCaseStudy.title}
           subtitle={featuredCaseStudy.problem}
         />
-        <p className="-mt-6 mb-8 max-w-4xl text-sm text-brandSoft md:text-base">
+        <p className="featured-feature-line -mt-6 mb-8 max-w-4xl text-sm md:text-base">
           {featuredCaseStudy.featureLine}
         </p>
 
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid items-stretch gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <motion.div
+            className="h-full"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: isNarrowMotion, amount: 0.25 }}
@@ -264,7 +265,7 @@ export default function FeaturedProject() {
               delay: isNarrowMotion ? 0 : 0.1,
               ease: 'easeOut'
             }}
-            className="glass rounded-2xl p-6"
+            className="glass h-full rounded-2xl p-6"
           >
             <motion.h3
               className="mb-4 font-[var(--font-display)] text-xl text-text"
