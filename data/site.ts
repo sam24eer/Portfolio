@@ -1,13 +1,17 @@
 ﻿export type FeaturedCaseStudy = {
   title: string;
   problem: string;
+  featureLine: string;
   architectureLayers: { name: string; details: string }[];
-  personas: { title: string; need: string }[];
-  metrics: string[];
   workflows: string[];
-  incidents: string[];
-  releases: string[];
   stack: string[];
+  modalTitle: string;
+  modalSummary: string;
+  modalSections: {
+    title: string;
+    details?: string;
+    items?: string[];
+  }[];
 };
 
 export type SecondaryProject = {
@@ -39,80 +43,121 @@ export const aboutHighlights = [
 export const featuredCaseStudy: FeaturedCaseStudy = {
   title: 'AI Customer Support Operations Platform',
   problem:
-    'Support teams were overloaded by repetitive tickets, inconsistent triage quality, and delayed response loops between operations, product, and engineering.',
+    'Support teams often face high ticket volume, slow triage, and limited visibility into automation performance. This system demonstrates a safe AI-assisted support operations workflow combining AI intent classification, retrieval-augmented knowledge lookup (RAG), automation guardrails, and human escalation.',
+  featureLine:
+    'AI intent classification • RAG knowledge retrieval • ticket lifecycle management • SLA monitoring • ops dashboard • agent workspace',
   architectureLayers: [
     {
       name: '1. User Interaction Layer',
       details:
-        'End User UI (/ui): ticket submission form. Ops/Admin UI (/ops): ticket history and user search via FastAPI routes.'
+        'Customer ticket UI, Ops dashboard, and agent workspace interfaces.'
     },
     {
       name: '2. API and Intake Layer',
       details:
-        'FastAPI Ticket Intake API with POST /tickets (submission), GET /tickets (ops visibility), and CORS for browser clients.'
+        'FastAPI endpoints handling ticket ingestion, ticket history, and agent updates.'
     },
     {
       name: '3. AI Intelligence Layer',
       details:
-        'Intent classifier (stub / ML / LLM-ready) outputs intent and confidence score with no direct action authority.'
+        'Intent classification using local embedding models and confidence scoring.'
     },
     {
-      name: '4. Decision and Ops Control Layer',
+      name: '4. Retrieval Layer',
       details:
-        'Rule-based decision engine with confidence thresholds, auto-resolve vs escalate logic, and human-in-the-loop safety.'
+        'RAG pipeline retrieving relevant knowledge base articles for support responses.'
     },
     {
-      name: '5. Data and Observability Layer',
+      name: '5. Decision Engine',
       details:
-        'In-memory ticket store (MVP), metrics and event logging, and decision audit trail exposed via /metrics.'
+        'Rule-based automation deciding auto-resolution vs escalation using confidence thresholds.'
     },
     {
-      name: '6. Deployment Layer',
+      name: '6. Data & Observability Layer',
       details:
-        'Dockerized single service (FastAPI + User UI + Ops UI) with one-command startup via docker-compose.'
+        'SQLite ticket storage, SLA deadline tracking, metrics, and decision audit trail.'
+    },
+    {
+      name: '7. Deployment Layer',
+      details:
+        'Dockerized service for consistent local and cloud environments.'
     }
-  ],
-  personas: [
-    {
-      title: 'Support Operations Lead',
-      need: 'Needs queue health visibility, SLA prediction, and workforce balancing in real time.'
-    },
-    {
-      title: 'Customer Support Agent',
-      need: 'Needs reliable AI-assisted response drafts, policy-safe recommendations, and fast escalations.'
-    },
-    {
-      title: 'Product Manager',
-      need: 'Needs defect signals, feature request clustering, and release risk insights from support telemetry.'
-    }
-  ],
-  metrics: [
-    'Median first-response time',
-    'Escalation rate by ticket type',
-    'Auto-resolution precision and recall',
-    'SLA breach probability',
-    'Incident re-open rate',
-    'Customer effort score trend'
   ],
   workflows: [
-    'Controlled AI automation with human fallback.',
-    'Separation of prediction and decision authority.',
-    'Ops-first observability and metrics.',
-    'Safe iteration with clear rollback paths.',
-    'Deployment-ready via Docker for consistent environments.'
+    'Human-in-the-loop AI automation with controlled escalation.',
+    'Clear separation between AI predictions and operational decision rules.',
+    'End-to-end observability through ticket metrics and dashboards.',
+    'Ticket lifecycle management with SLA monitoring.',
+    'Agent workspace for handling escalated support tickets.',
+    'Deployment-ready architecture using Docker.'
   ],
-  incidents: [
-    'Defined severity matrix (SEV-1 to SEV-4) with runbooks and communication ladders.',
-    'Set 15-minute acknowledgement SLA for critical incidents with owner assignment.',
-    'Implemented post-incident review templates with corrective action tracking.'
+  stack: [
+    'FastAPI',
+    'Python',
+    'RAG Retrieval',
+    'Sentence Transformers',
+    'SQLite',
+    'HTML / JavaScript',
+    'Docker',
+    'Metrics & Observability'
   ],
-  releases: [
-    'Canary releases on low-risk queues before broad production rollout.',
-    'Release checklist gates: model quality, policy compliance, and rollback readiness.',
-    'Biweekly release notes connecting ops outcomes to product decisions.'
-  ],
-  stack: ['FastAPI', 'Python', 'HTML / JavaScript', 'Docker', 'OpenAI API (optional / pluggable)', 'Metrics & Logging']
+  modalTitle: 'AI Support Operations Platform',
+  modalSummary:
+    'Prototype AI system that automates customer support workflows while maintaining operational guardrails.',
+  modalSections: [
+    {
+      title: 'System Overview',
+      details:
+        'AI-powered ticket intake, intent classification, RAG knowledge retrieval, and rule-based automation.'
+    },
+    {
+      title: 'Ticket Lifecycle',
+      details: 'Created → In Review → Resolved'
+    },
+    {
+      title: 'Agent Workspace',
+      details:
+        'Interface for agents to review escalated tickets and update status.'
+    },
+    {
+      title: 'Ops Dashboard',
+      details:
+        'Operational visibility including ticket metrics, SLA monitoring, and search.'
+    },
+    {
+      title: 'Metrics Tracked',
+      items: [
+        'Total tickets',
+        'Auto-resolution rate',
+        'Escalation rate',
+        'Resolved tickets',
+        'SLA breaches'
+      ]
+    },
+    {
+      title: 'Technology Stack',
+      items: [
+        'FastAPI backend',
+        'Sentence Transformers intent classifier',
+        'RAG knowledge retrieval',
+        'SQLite ticket database',
+        'HTML / JavaScript frontend',
+        'Docker deployment'
+      ]
+    },
+    {
+      title: 'Development Timeline',
+      items: [
+        'Week 1 — Architecture: Defined AI-assisted support workflow and backend structure.',
+        'Week 2 — AI Decision Engine: Implemented intent classification and automation vs escalation logic.',
+        'Week 3 — UI + Ops Dashboard: Built ticket UI, search, metrics visualization, and history tracking.',
+        'Week 4 — AI Ops Enhancements: Added RAG retrieval, SLA monitoring, and agent workspace.'
+      ]
+    }
+  ]
 };
+
+
 
 export const secondaryProjects: SecondaryProject[] = [
   {
@@ -335,4 +380,6 @@ export const hobbyPhotos: HobbyPhoto[] = [
     height: 1080
   }
 ];
+
+
 

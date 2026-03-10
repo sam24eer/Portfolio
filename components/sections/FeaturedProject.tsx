@@ -241,6 +241,9 @@ export default function FeaturedProject() {
           title={featuredCaseStudy.title}
           subtitle={featuredCaseStudy.problem}
         />
+        <p className="-mt-6 mb-8 max-w-4xl text-sm text-brandSoft md:text-base">
+          {featuredCaseStudy.featureLine}
+        </p>
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <motion.div
@@ -342,7 +345,7 @@ export default function FeaturedProject() {
               aria-label="AI Customer Support Operations Platform full case study"
             >
               <div className="mb-4 flex items-start justify-between gap-4">
-                <h3 className="font-[var(--font-display)] text-2xl text-text">{featuredCaseStudy.title}</h3>
+                <h3 className="font-[var(--font-display)] text-2xl text-text">{featuredCaseStudy.modalTitle}</h3>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -352,51 +355,23 @@ export default function FeaturedProject() {
                   <X size={18} />
                 </button>
               </div>
-              <p className="mb-5 text-sm leading-relaxed text-muted">{featuredCaseStudy.problem}</p>
+              <p className="mb-5 text-sm leading-relaxed text-muted">{featuredCaseStudy.modalSummary}</p>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-xl border border-line p-4">
-                  <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-brandSoft">
-                    User Personas
-                  </h4>
-                  <ul className="space-y-3 text-sm text-muted">
-                    {featuredCaseStudy.personas.map((persona) => (
-                      <li key={persona.title}>
-                        <p className="font-medium text-text">{persona.title}</p>
-                        <p>{persona.need}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-xl border border-line p-4">
-                  <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-brandSoft">
-                    Metrics Tracked
-                  </h4>
-                  <ul className="space-y-2 text-sm text-muted">
-                    {featuredCaseStudy.metrics.map((metric) => (
-                      <li key={metric}>- {metric}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-xl border border-line p-4">
-                  <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-brandSoft">
-                    Incident Handling
-                  </h4>
-                  <ul className="space-y-2 text-sm text-muted">
-                    {featuredCaseStudy.incidents.map((item) => (
-                      <li key={item}>- {item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-xl border border-line p-4">
-                  <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-brandSoft">
-                    Release Management
-                  </h4>
-                  <ul className="space-y-2 text-sm text-muted">
-                    {featuredCaseStudy.releases.map((item) => (
-                      <li key={item}>- {item}</li>
-                    ))}
-                  </ul>
-                </div>
+                {featuredCaseStudy.modalSections.map((section) => (
+                  <div key={section.title} className="rounded-xl border border-line p-4">
+                    <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-brandSoft">
+                      {section.title}
+                    </h4>
+                    {section.details ? <p className="text-sm text-muted">{section.details}</p> : null}
+                    {section.items ? (
+                      <ul className="space-y-2 text-sm text-muted">
+                        {section.items.map((item) => (
+                          <li key={item}>- {item}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ))}
               </div>
             </motion.div>
           </motion.div>
